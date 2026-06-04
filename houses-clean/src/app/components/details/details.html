@@ -1,87 +1,53 @@
-<article>
-  <!-- Imagen principal -->
-  <img class="listing-photo" [src]="housingLocation?.photo"
-       alt="Exterior photo of {{housingLocation?.name}}"/>
+<article *ngIf="housingLocation">
+  <img class="listing-photo" [src]="housingLocation.photo || 'https://placehold.co/600x400?text=Casa+Sin+Foto'" alt="Exterior de {{housingLocation.name}}"/>
 
-  <!-- Información básica -->
   <section class="listing-description">
-    <h2 class="listing-heading">{{housingLocation?.name}}</h2>
-    <p class="listing-location">
-      {{housingLocation?.city}}, {{housingLocation?.state}}
-    </p>
+    <h2 class="listing-heading">{{housingLocation.name}}</h2>
+    <p class="listing-location">{{housingLocation.city}}, {{housingLocation.state}}</p>
+    <p class="price-tag">Precio Estimado: <strong>{{housingLocation.price | currency:'USD':'symbol':'1.0-0'}}</strong></p>
   </section>
 
-  <!-- Características -->
+  <section class="weather-box" *ngIf="weatherData">
+    <h3>🌤️ Clima en esta ubicación</h3>
+    <div class="weather-info">
+      <img [src]="weatherData.current.condition.icon" alt="Estado del tiempo">
+      <div>
+        <p><strong>{{weatherData.current.temp_c}}°C</strong> - {{weatherData.current.condition.text}}</p>
+        <p>Humedad: {{weatherData.current.humidity}}% | Viento: {{weatherData.current.wind_kph}} km/h</p>
+      </div>
+    </div>
+  </section>
+
   <section class="listing-features">
-    <h2 class="section-heading">About this housing location</h2>
+    <h2 class="section-heading">Características básicas</h2>
     <ul>
-      <li>Units available: {{housingLocation?.availableUnits}}</li>
-      <li>Price: {{housingLocation?.price | currency:'EUR'}}</li>
-      <li>Is available: {{housingLocation?.available ? 'Yes' : 'No'}}</li>
-      <li>Does this location have wifi: {{housingLocation?.wifi ? 'Yes' : 'No'}}</li>
-      <li>Does this location have laundry: {{housingLocation?.laundry ? 'Yes' : 'No'}}</li>
+      <li>Unidades disponibles: {{housingLocation.availableUnits}}</li>
+      <li>Conexión Wi-Fi: {{housingLocation.wifi ? 'Sí' : 'No'}}</li>
+      <li>Servicio Lavandería: {{housingLocation.laundry ? 'Sí' : 'No'}}</li>
     </ul>
   </section>
 
-  <!-- Clima (solo se muestra si hay datos) -->
-  <section class="weather-info" *ngIf="weatherData">
-    <h2 class="section-heading">Current Weather</h2>
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <img [src]="weatherData.current.condition.icon" alt="weather icon">
-      <p>
-        <strong>{{weatherData.current.temp_c}}°C</strong>
-        - {{weatherData.current.condition.text}}
-      </p>
-    </div>
+  <section class="map-section">
+    <h2 class="section-heading">📍 Ubicación Geográfica</h2>
+    <div id="map" style="height: 300px; border-radius: 12px; margin-bottom: 20px;"></div>
   </section>
 
-  <!-- Mapa -->
-  <section>
-    <h2 class="section-heading">Location Map</h2>
-    <div id="map"
-         style="height: 300px; width: 100%; border-radius: 10px; margin-top: 10px;">
-    </div>
-  </section>
-
-
-  <a routerLink="/form" class="btn btn-primary mb-3">Formulario</a>
-  <br>
-
-  <!-- Formulario -->
   <section class="listing-apply">
-    <h2 class="section-heading">Apply now to live here</h2>
-
+    <h2 class="section-heading">Aplica ahora para vivir aquí</h2>
     <form [formGroup]="applyForm" (submit)="submitApplication()">
-
-      <label for="first-name">First Name</label>
+      <label for="first-name">Nombre *</label>
       <input id="first-name" type="text" formControlName="firstName">
-      <p *ngIf="applyForm.get('firstName')?.invalid &&
-                    applyForm.get('firstName')?.touched"
-         class="error-text">
-        First name is required
-      </p>
+      <span class="error-msg" *ngIf="applyForm.get('firstName')?.touched && applyForm.get('firstName')?.invalid">El nombre es obligatorio.</span>
 
-      <label for="last-name">Last Name</label>
+      <label for="last-name">Apellidos *</label>
       <input id="last-name" type="text" formControlName="lastName">
-      <p *ngIf="applyForm.get('lastName')?.invalid &&
-                    applyForm.get('lastName')?.touched"
-         class="error-text">
-        Last name is required
-      </p>
+      <span class="error-msg" *ngIf="applyForm.get('lastName')?.touched && applyForm.get('lastName')?.invalid">El apellido es obligatorio.</span>
 
-      <label for="email">Email</label>
+      <label for="email">Correo Electrónico *</label>
       <input id="email" type="email" formControlName="email">
-      <p *ngIf="applyForm.get('email')?.invalid &&
-                    applyForm.get('email')?.touched"
-         class="error-text">
-        Valid email is required
-      </p>
+      <span class="error-msg" *ngIf="applyForm.get('email')?.touched && applyForm.get('email')?.invalid">Introduce un email válido.</span>
 
-      <button type="submit"
-              class="primary"
-              [disabled]="applyForm.invalid">
-        Apply now
-      </button>
+      <button type="submit" class="primary">Enviar Solicitud</button>
     </form>
   </section>
 </article>

@@ -1,22 +1,15 @@
-<section class="listing">
+<section class="listing" [class.unavailable]="!housingLocation.available">
+  <div class="photo-container">
+    <img class="listing-photo" [src]="housingLocation.photo || 'https://placehold.co/600x400?text=Casa+Sin+Foto'" alt="Foto de {{housingLocation.name}}">
+    <span class="badge-price">{{ housingLocation.price | currency:'USD':'symbol':'1.0-0' }}</span>
+  </div>
+  <h2 class="listing-heading">{{ housingLocation.name }}</h2>
+  <p class="listing-location">{{ housingLocation.city }}, {{ housingLocation.state }}</p>
 
-  <img
-    class="listing-photo"
-    [src]="housingLocation.photo"
-    [alt]="housingLocation.name">
+  <div class="status-info">
+    <span [@if]="housingLocation.available" class="available-tag">✅ Disponible</span>
+    <span [@if]="!housingLocation.available" class="sold-tag">❌ No disponible</span>
+  </div>
 
-  <h2 class="listing-heading">
-    {{ housingLocation.name }}
-  </h2>
-
-  <p class="listing-location">
-    {{ housingLocation.city }},
-    {{ housingLocation.state }}
-  </p>
-
-  <a
-    [routerLink]="['/details', housingLocation.id]">
-    Learn More
-  </a>
-
+  <a [routerLink]="['/details', housingLocation.id]">Ver más detalles</a>
 </section>

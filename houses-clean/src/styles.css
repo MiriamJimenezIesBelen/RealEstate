@@ -1,11 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
-:root {
-  --primary-color: #605dc8;
-  --secondary-color: #8b89e6;
-  --accent-color: #e8e7fa;
-  --shadow-color: rgba(0, 0, 0, 0.1);
-}
-
+/* Puedes añadir estilos globales a este archivo y también importar otros archivos de estilo */
 * {
   margin: 0;
   padding: 0;
@@ -14,4 +7,13 @@
 
 body {
   font-family: 'Inter', sans-serif;
+}
+
+button.primary {
+  padding: 10px;
+  border: solid 1px var(--primary-color);
+  background: var(--primary-color);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
 }

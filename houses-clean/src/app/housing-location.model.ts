@@ -1,5 +1,10 @@
-export interface HousingLocationModel {
-  id: number;
+export interface Coordinate {
+  latitude: number;
+  longitude: number;
+}
+
+export interface HousingLocation {
+  id?: number;
   name: string;
   city: string;
   state: string;
@@ -7,10 +12,7 @@ export interface HousingLocationModel {
   availableUnits: number;
   wifi: boolean;
   laundry: boolean;
-  coordinate: {
-    latitude: number;
-    longitude: number;
-  };
+  coordinate: Coordinate;
   price: number;
   available: boolean;
 }

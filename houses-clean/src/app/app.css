@@ -1,0 +1,19 @@
+:host {
+  --primary-color: #605DC8;
+  --secondary-color: #8B89E6;
+  --accent-color: #e8e7fa;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+.brand-name {
+  padding: 20px;
+  border-bottom: solid 1px var(--shadow-color);
+}
+
+.brand-logo {
+  width: 200px;
+}
+
+.content {
+  padding: 20px;
+}

@@ -1,28 +1,11 @@
-<section class="search-section">
-
-  <input
-    #filter
-    type="text"
-    placeholder="Filter by city">
-
-  <button
-    (click)="filterResults(filter.value)">
-    Search
-  </button>
-
+<section>
+  <form (submit)="$event.preventDefault()">
+    <input type="text" placeholder="Filtrar por ciudad" #filter (input)="filterResults(filter.value)">
+  </form>
 </section>
-
 <section class="results">
-
-  @for (
-    house of filteredLocationList();
-    track house.id
-    ) {
-
-    <app-housing-location
-      [housingLocation]="house">
-    </app-housing-location>
-
-  }
-
+  <app-housing-location
+    *ngFor="let housingLocation of filteredLocationList"
+    [housingLocation]="housingLocation">
+  </app-housing-location>
 </section>

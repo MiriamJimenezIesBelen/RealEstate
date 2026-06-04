@@ -1,147 +1,102 @@
-// Importa herramientas básicas de Angular
-import { Component, inject, OnInit } from '@angular/core';
-
-// Importa directivas comunes como *ngIf, *ngFor, pipes, etc.
+import { Component, inject, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-// Permite leer parámetros de la URL (por ejemplo :id)
-import {ActivatedRoute, RouterLink} from '@angular/router';
-
-// Servicio que maneja casas, clima y solicitudes
-import { HousingService } from '../../housing.service';
-
-import { HousingLocationModel }
-  from '../../models/housing-location.model';
-
-// Formularios reactivos y validadores
+import { ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HousingService } from '../../services/housing.service';
+import { HousingLocation } from '../../housing-location.model';
 
-// Librería Leaflet para mapas
-import * as L from 'leaflet';
+// Declaración global segura para usar Leaflet sin instalar tipos complejos
+declare let L: any;
 
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterLink
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './details.html',
   styleUrl: './details.css'
 })
+export class DetailsComponent implements OnInit, AfterViewInit {
+  private route = inject(ActivatedRoute);
+  private housingService = inject(HousingService);
 
-export class DetailsComponent implements OnInit {
-
-  // Lee la ruta actual
-  route: ActivatedRoute = inject(ActivatedRoute);
-
-  // Inyecta el servicio de viviendas
-  housingService = inject(HousingService);
-
-  housingLocation:
-    HousingLocationModel | undefined;
-
-  // Datos del clima
+  housingLocation: HousingLocation | undefined;
   weatherData: any;
+  map: any;
 
-  // Instancia del mapa Leaflet
-  private map: any;
-
-  // Definición del formulario reactivo
   applyForm = new FormGroup({
-    firstName: new FormControl('', Validators.required),
-    lastName: new FormControl('', Validators.required),
-    email: new FormControl('', [
-      Validators.required,
-      Validators.email
-    ])
+    firstName: new FormControl('', Validators.required), // Requerido [cite: 12]
+    lastName: new FormControl('', Validators.required),  // Requerido [cite: 12]
+    email: new FormControl('', [Validators.required, Validators.email]) // Formato email [cite: 13]
   });
 
-  // Se ejecuta al iniciar el componente
-  ngOnInit() {
+  ngOnInit(): void {
+    const id = Number(this.route.snapshot.params['id']);
 
-    // Cargar datos guardados en LocalStorage
-    const savedData = localStorage.getItem('applicationData');
-    if (savedData) {
-      this.applyForm.patchValue(JSON.parse(savedData));
-    }
-
-    //  Obtener el ID desde la URL
-    const housingLocationId =
-      parseInt(this.route.snapshot.params['id'], 10);
-
-    //  Obtener la casa por ID
-    this.housingService
-      .getHousingLocationById(housingLocationId)
-      .then(location => {
+    this.housingService.getHousingLocationById(id).subscribe({
+      next: (location) => {
         this.housingLocation = location;
-        if (location) {
-          this.loadExtras();
-        }
-      });
-  }
 
-  // Carga clima y mapa
-  private loadExtras() {
+        // Llamar a la API de Clima usando latitud y longitud
+        this.getWeatherInfo(location.coordinate.latitude, location.coordinate.longitude);
 
-    // Obtener clima usando coordenadas
-    this.housingService.getWeather(
-      this.housingLocation!.coordinate.latitude,
-      this.housingLocation!.coordinate.longitude
-    ).then(data => this.weatherData = data);
+        // Inicializar el mapa de Leaflet si la vista ya cargó
+        this.initMap();
+      }
+    });
 
-    // Esperar a que exista el div del mapa
-    setTimeout(() => this.initMap(), 100);
-  }
-
-  // Inicializa el mapa Leaflet
-  private initMap(): void {
-    const mapDiv = document.getElementById('map');
-
-    if (this.housingLocation?.coordinate && mapDiv && !this.map) {
-
-      const { latitude, longitude } = this.housingLocation.coordinate;
-
-      // Crear mapa
-      this.map = L.map('map').setView([latitude, longitude], 13);
-
-      // Capa de OpenStreetMap
-      L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        { attribution: '© OpenStreetMap' }
-      ).addTo(this.map);
-
-      // Marcador
-      L.marker([latitude, longitude])
-        .addTo(this.map)
-        .bindPopup(this.housingLocation.name)
-        .openPopup();
-
-      // Forzar recalculo del tamaño
-      setTimeout(() => this.map.invalidateSize(), 200);
+    // LocalStorage: Recuperar y autocompletar si existen datos previos [cite: 16]
+    const savedUserData = localStorage.getItem('userApplicationProfile');
+    if (savedUserData) {
+      const parsedData = JSON.parse(savedUserData);
+      this.applyForm.patchValue(parsedData);
     }
   }
 
-  // Envío del formulario
+  ngAfterViewInit(): void {
+    if (this.housingLocation) {
+      this.initMap();
+    }
+  }
+
+  getWeatherInfo(lat: number, lon: number) {
+    this.housingService.getWeather(lat, lon).subscribe({
+      next: (data) => this.weatherData = data,
+      error: (err) => console.error('Error cargando clima:', err)
+    });
+  }
+
+  initMap() {
+    if (!this.housingLocation || this.map) return;
+
+    const lat = this.housingLocation.coordinate.latitude;
+    const lon = this.housingLocation.coordinate.longitude;
+
+    // Crear mapa Leaflet centrado en la ubicación
+    this.map = L.map('map').setView([lat, lon], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(this.map);
+
+    L.marker([lat, lon]).addTo(this.map)
+      .bindPopup(this.housingLocation.name)
+      .openPopup();
+  }
+
   submitApplication() {
-    if (this.applyForm.valid) {
-
-      // Guardar en LocalStorage
-      localStorage.setItem(
-        'applicationData',
-        JSON.stringify(this.applyForm.value)
-      );
-
-      // Enviar datos al servicio
-      this.housingService.submitApplication(
-        this.applyForm.value.firstName ?? '',
-        this.applyForm.value.lastName ?? '',
-        this.applyForm.value.email ?? ''
-      );
-
-      // Mensaje al usuario
-      alert('¡Solicitud enviada!');
+    if (this.applyForm.invalid) {
+      this.applyForm.markAllAsTouched();
+      return;
     }
+
+    // LocalStorage: Guardar permanentemente la información en el cliente [cite: 15]
+    localStorage.setItem('userApplicationProfile', JSON.stringify(this.applyForm.value));
+
+    alert('¡Solicitud registrada con éxito! Los datos se han guardado localmente.');
+    this.housingService.submitApplication(
+      this.applyForm.value.firstName ?? '',
+      this.applyForm.value.lastName ?? '',
+      this.applyForm.value.email ?? ''
+    );
   }
 }

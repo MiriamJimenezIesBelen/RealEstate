@@ -1,17 +1,15 @@
 import { Component, Input } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { HousingLocationModel } from '../../models/housing-location.model';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { HousingLocation } from '../../housing-location.model';
 
 @Component({
   selector: 'app-housing-location',
   standalone: true,
-  imports: [RouterLink],
+  imports: [CommonModule, RouterModule],
   templateUrl: './housing-location.html',
   styleUrl: './housing-location.css'
 })
 export class HousingLocationComponent {
-
-  @Input({ required: true })
-  housingLocation!: HousingLocationModel;
-
+  @Input() housingLocation!: HousingLocation;
 }
