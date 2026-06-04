@@ -1,0 +1,28 @@
+<section class="search-section">
+
+  <input
+    #filter
+    type="text"
+    placeholder="Filter by city">
+
+  <button
+    (click)="filterResults(filter.value)">
+    Search
+  </button>
+
+</section>
+
+<section class="results">
+
+  @for (
+    house of filteredLocationList();
+    track house.id
+    ) {
+
+    <app-housing-location
+      [housingLocation]="house">
+    </app-housing-location>
+
+  }
+
+</section>

@@ -1,0 +1,87 @@
+<article>
+  <!-- Imagen principal -->
+  <img class="listing-photo" [src]="housingLocation?.photo"
+       alt="Exterior photo of {{housingLocation?.name}}"/>
+
+  <!-- Información básica -->
+  <section class="listing-description">
+    <h2 class="listing-heading">{{housingLocation?.name}}</h2>
+    <p class="listing-location">
+      {{housingLocation?.city}}, {{housingLocation?.state}}
+    </p>
+  </section>
+
+  <!-- Características -->
+  <section class="listing-features">
+    <h2 class="section-heading">About this housing location</h2>
+    <ul>
+      <li>Units available: {{housingLocation?.availableUnits}}</li>
+      <li>Price: {{housingLocation?.price | currency:'EUR'}}</li>
+      <li>Is available: {{housingLocation?.available ? 'Yes' : 'No'}}</li>
+      <li>Does this location have wifi: {{housingLocation?.wifi ? 'Yes' : 'No'}}</li>
+      <li>Does this location have laundry: {{housingLocation?.laundry ? 'Yes' : 'No'}}</li>
+    </ul>
+  </section>
+
+  <!-- Clima (solo se muestra si hay datos) -->
+  <section class="weather-info" *ngIf="weatherData">
+    <h2 class="section-heading">Current Weather</h2>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <img [src]="weatherData.current.condition.icon" alt="weather icon">
+      <p>
+        <strong>{{weatherData.current.temp_c}}°C</strong>
+        - {{weatherData.current.condition.text}}
+      </p>
+    </div>
+  </section>
+
+  <!-- Mapa -->
+  <section>
+    <h2 class="section-heading">Location Map</h2>
+    <div id="map"
+         style="height: 300px; width: 100%; border-radius: 10px; margin-top: 10px;">
+    </div>
+  </section>
+
+
+  <a routerLink="/form" class="btn btn-primary mb-3">Formulario</a>
+  <br>
+
+  <!-- Formulario -->
+  <section class="listing-apply">
+    <h2 class="section-heading">Apply now to live here</h2>
+
+    <form [formGroup]="applyForm" (submit)="submitApplication()">
+
+      <label for="first-name">First Name</label>
+      <input id="first-name" type="text" formControlName="firstName">
+      <p *ngIf="applyForm.get('firstName')?.invalid &&
+                    applyForm.get('firstName')?.touched"
+         class="error-text">
+        First name is required
+      </p>
+
+      <label for="last-name">Last Name</label>
+      <input id="last-name" type="text" formControlName="lastName">
+      <p *ngIf="applyForm.get('lastName')?.invalid &&
+                    applyForm.get('lastName')?.touched"
+         class="error-text">
+        Last name is required
+      </p>
+
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email">
+      <p *ngIf="applyForm.get('email')?.invalid &&
+                    applyForm.get('email')?.touched"
+         class="error-text">
+        Valid email is required
+      </p>
+
+      <button type="submit"
+              class="primary"
+              [disabled]="applyForm.invalid">
+        Apply now
+      </button>
+    </form>
+  </section>
+</article>
