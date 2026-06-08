@@ -1,31 +1,95 @@
 .listing {
-  background: var(--accent-color);
-  border-radius: 30px;
-  padding-bottom: 30px;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(96, 93, 200, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid rgba(96, 93, 200, 0.08);
+}
+
+.listing:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(96, 93, 200, 0.2);
+}
+
+.listing.unavailable {
+  opacity: 0.75;
+}
+
+.photo-container {
+  position: relative;
+}
+
+.listing-photo {
+  height: 220px;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.badge-price {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--primary-color);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.badge-status {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-status.available {
+  background: rgba(34, 197, 94, 0.15);
+  color: #16a34a;
+}
+
+.badge-status.sold {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
 }
 
 .listing-heading {
   color: var(--primary-color);
-  padding: 10px 20px 0 20px;
-}
-
-.listing-photo {
-  height: 250px;
-  width: 100%;
-  object-fit: cover;
-  border-radius: 30px 30px 0 0;
+  padding: 14px 20px 4px 20px;
+  font-size: 17px;
+  font-weight: 700;
 }
 
 .listing-location {
-  padding: 10px 20px 20px 20px;
+  padding: 0 20px 14px 20px;
+  color: #666;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .listing-location::before {
-  content: url("/assets/location-pin.svg");
+  content: "📍";
+  font-size: 12px;
 }
 
-.listing a {
-  padding-left: 20px;
+.learn-more {
+  display: inline-block;
+  padding: 10px 20px 16px 20px;
   text-decoration: none;
   color: var(--primary-color);
+  font-weight: 600;
+  font-size: 14px;
+  transition: gap 0.2s;
+}
+
+.learn-more:hover {
+  text-decoration: underline;
 }

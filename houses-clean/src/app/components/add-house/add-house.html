@@ -1,60 +1,93 @@
-<div class="container mt-5">
-  <h2 class="mb-4">Añadir nueva vivienda</h2>
+<div class="add-house-container">
+  <div class="form-card">
+    <div class="form-header">
+      <h2>Añadir nueva vivienda</h2>
+      <p class="subtitle">Rellena el formulario para registrar una nueva propiedad</p>
+    </div>
 
-  <div *ngIf="successMsg" class="alert alert-success">
-    {{ successMsg }}
+    <div class="alert alert-success" *ngIf="successMsg">{{ successMsg }}</div>
+    <div class="alert alert-danger"  *ngIf="errorMsg">{{ errorMsg }}</div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Nombre -->
+      <div class="form-group">
+        <label class="form-label">Nombre / Título *</label>
+        <input type="text" class="form-control" formControlName="name"
+          [class.is-invalid]="form.controls.name.touched && form.controls.name.invalid">
+        <div class="invalid-feedback" *ngIf="form.controls.name.touched && form.controls.name.invalid">
+          <span *ngIf="form.controls.name.errors?.['required']">El nombre es obligatorio.</span>
+          <span *ngIf="form.controls.name.errors?.['minlength']">Mínimo 3 caracteres.</span>
+        </div>
+      </div>
+
+      <!-- Ciudad y Estado -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Ciudad *</label>
+          <input type="text" class="form-control" formControlName="city"
+            [class.is-invalid]="form.controls.city.touched && form.controls.city.invalid">
+          <div class="invalid-feedback" *ngIf="form.controls.city.touched && form.controls.city.invalid">
+            La ciudad es obligatoria.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Estado *</label>
+          <input type="text" class="form-control" formControlName="state"
+            [class.is-invalid]="form.controls.state.touched && form.controls.state.invalid">
+          <div class="invalid-feedback" *ngIf="form.controls.state.touched && form.controls.state.invalid">
+            El estado es obligatorio.
+          </div>
+        </div>
+      </div>
+
+      <!-- Unidades y Precio -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Unidades disponibles *</label>
+          <input type="number" class="form-control" formControlName="availableUnits" min="1"
+            [class.is-invalid]="form.controls.availableUnits.touched && form.controls.availableUnits.invalid">
+          <div class="invalid-feedback" *ngIf="form.controls.availableUnits.touched && form.controls.availableUnits.invalid">
+            Mínimo 1 unidad.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Precio mensual ($) *</label>
+          <input type="number" class="form-control" formControlName="price" min="10000"
+            [class.is-invalid]="form.controls.price.touched && form.controls.price.invalid">
+          <div class="invalid-feedback" *ngIf="form.controls.price.touched && form.controls.price.invalid">
+            El precio mínimo es $10,000.
+          </div>
+        </div>
+      </div>
+
+      <!-- Checkboxes -->
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="wifi">
+          <span>¿Tiene Wi-Fi?</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="laundry">
+          <span>¿Tiene lavandería?</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="available">
+          <span>Disponible ahora</span>
+        </label>
+      </div>
+
+      <!-- Acciones -->
+      <div class="form-actions">
+        <button type="submit" class="primary btn-submit" [disabled]="form.invalid || submitting">
+          <span *ngIf="submitting" class="spinner">⏳</span>
+          {{ submitting ? 'Guardando...' : 'Guardar vivienda' }}
+        </button>
+        <button type="button" class="btn-cancel" (click)="cancel()">Cancelar</button>
+      </div>
+
+    </form>
   </div>
-
-  <div *ngIf="errorMsg" class="alert alert-danger">
-    {{ errorMsg }}
-  </div>
-
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-    <div class="form-group">
-      <label class="form-label">Nombre / Título *</label>
-      <input type="text" class="form-control" formControlName="name">
-      <div class="error-msg" *ngIf="form.controls.name.touched && form.controls.name.invalid">
-        El nombre es obligatorio (Mínimo 3 caracteres).
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Ciudad *</label>
-        <input type="text" class="form-control" formControlName="city">
-        <div class="error-msg" *ngIf="form.controls.city.touched && form.controls.city.invalid">El campo Ciudad es obligatorio.</div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Estado *</label>
-        <input type="text" class="form-control" formControlName="state">
-        <div class="error-msg" *ngIf="form.controls.state.touched && form.controls.state.invalid">El campo Estado es obligatorio.</div>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Unidades Disponibles *</label>
-        <input type="number" class="form-control" formControlName="availableUnits">
-        <div class="error-msg" *ngIf="form.controls.availableUnits.touched && form.controls.availableUnits.invalid">Mínimo 1 unidad.</div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Precio ($) *</label>
-        <input type="number" class="form-control" formControlName="price">
-        <div class="error-msg" *ngIf="form.controls.price.touched && form.controls.price.invalid">Mínimo valor de $10,000.</div>
-      </div>
-    </div>
-
-    <div class="checkbox-group">
-      <label><input type="checkbox" formControlName="wifi"> ¿Tiene Wifi?</label>
-      <label><input type="checkbox" formControlName="laundry"> ¿Tiene Lavandería?</label>
-      <label><input type="checkbox" formControlName="available"> Disponible Ahora</label>
-    </div>
-
-    <div class="actions">
-      <button type="submit" class="btn btn-primary" [disabled]="form.invalid || submitting">Guardar vivienda</button>
-      <button type="button" class="btn btn-secondary" (click)="cancel()">Cancelar</button>
-    </div>
-  </form>
 </div>

@@ -1,9 +1,9 @@
 <main>
   <header class="brand-name">
     <a [routerLink]="['/']">
-      <img class="brand-logo" src="/assets/logo.PNG" alt="logo">
+      <img class="brand-logo" src="/assets/logo.PNG" alt="logo" aria-hidden="true">
     </a>
-    <button class="primary add-btn" [routerLink]="['/add-house']">➕ Añadir Vivienda</button>
+    <button class="primary add-btn" [routerLink]="['/add-house']">+ Añadir Vivienda</button>
   </header>
   <section class="content">
     <router-outlet></router-outlet>

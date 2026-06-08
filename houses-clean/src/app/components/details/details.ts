@@ -1,11 +1,10 @@
-import { Component, inject, OnInit, AfterViewInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule, Validators, NonNullableFormBuilder } from '@angular/forms';
 import { HousingService } from '../../services/housing.service';
 import { HousingLocation } from '../../housing-location.model';
 
-// Declaración global segura para usar Leaflet sin instalar tipos complejos
 declare let L: any;
 
 @Component({
@@ -15,88 +14,82 @@ declare let L: any;
   templateUrl: './details.html',
   styleUrl: './details.css'
 })
-export class DetailsComponent implements OnInit, AfterViewInit {
+export class DetailsComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private housingService = inject(HousingService);
+  private fb = inject(NonNullableFormBuilder);
 
-  housingLocation: HousingLocation | undefined;
-  weatherData: any;
-  map: any;
+  housingLocation = signal<HousingLocation | undefined>(undefined);
+  weatherData = signal<any>(null);
+  weatherError = signal(false);
+  private map: any;
 
-  applyForm = new FormGroup({
-    firstName: new FormControl('', Validators.required), // Requerido [cite: 12]
-    lastName: new FormControl('', Validators.required),  // Requerido [cite: 12]
-    email: new FormControl('', [Validators.required, Validators.email]) // Formato email [cite: 13]
+  applyForm = this.fb.group({
+    firstName: ['', Validators.required],
+    lastName:  ['', Validators.required],
+    email:     ['', [Validators.required, Validators.email]]
   });
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.params['id']);
-
-    this.housingService.getHousingLocationById(id).subscribe({
-      next: (location) => {
-        this.housingLocation = location;
-
-        // Llamar a la API de Clima usando latitud y longitud
-        this.getWeatherInfo(location.coordinate.latitude, location.coordinate.longitude);
-
-        // Inicializar el mapa de Leaflet si la vista ya cargó
-        this.initMap();
-      }
+    this.route.paramMap.subscribe(params => {
+      const id = Number(params.get('id'));
+      this.housingService.getHousingLocationById(id).subscribe(location => {
+        this.housingLocation.set(location);
+        setTimeout(() => this.initMap(), 0);
+        this.housingService.getWeather(
+          location.coordinate.latitude,
+          location.coordinate.longitude
+        ).subscribe({
+          next: (data) => this.weatherData.set(data),
+          error: () => this.weatherError.set(true)
+        });
+      });
     });
 
-    // LocalStorage: Recuperar y autocompletar si existen datos previos [cite: 16]
-    const savedUserData = localStorage.getItem('userApplicationProfile');
-    if (savedUserData) {
-      const parsedData = JSON.parse(savedUserData);
-      this.applyForm.patchValue(parsedData);
+    const saved = localStorage.getItem('userApplicationProfile');
+    if (saved) {
+      this.applyForm.patchValue(JSON.parse(saved));
     }
   }
 
-  ngAfterViewInit(): void {
-    if (this.housingLocation) {
-      this.initMap();
+  private initMap(): void {
+    const loc = this.housingLocation();
+    if (!loc || this.map) return;
+
+    const mapEl = document.getElementById('map');
+    if (!mapEl) {
+      setTimeout(() => this.initMap(), 100);
+      return;
     }
-  }
 
-  getWeatherInfo(lat: number, lon: number) {
-    this.housingService.getWeather(lat, lon).subscribe({
-      next: (data) => this.weatherData = data,
-      error: (err) => console.error('Error cargando clima:', err)
-    });
-  }
+    if (typeof L === 'undefined') return;
 
-  initMap() {
-    if (!this.housingLocation || this.map) return;
+    const lat = loc.coordinate.latitude;
+    const lon = loc.coordinate.longitude;
 
-    const lat = this.housingLocation.coordinate.latitude;
-    const lon = this.housingLocation.coordinate.longitude;
-
-    // Crear mapa Leaflet centrado en la ubicación
     this.map = L.map('map').setView([lat, lon], 13);
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(this.map);
-
-    L.marker([lat, lon]).addTo(this.map)
-      .bindPopup(this.housingLocation.name)
+    L.marker([lat, lon])
+      .addTo(this.map)
+      .bindPopup(`<strong>${loc.name}</strong><br>${loc.city}, ${loc.state}`)
       .openPopup();
   }
 
-  submitApplication() {
+  submitApplication(): void {
     if (this.applyForm.invalid) {
       this.applyForm.markAllAsTouched();
       return;
     }
-
-    // LocalStorage: Guardar permanentemente la información en el cliente [cite: 15]
-    localStorage.setItem('userApplicationProfile', JSON.stringify(this.applyForm.value));
-
-    alert('¡Solicitud registrada con éxito! Los datos se han guardado localmente.');
+    localStorage.setItem('userApplicationProfile', JSON.stringify(this.applyForm.getRawValue()));
     this.housingService.submitApplication(
       this.applyForm.value.firstName ?? '',
       this.applyForm.value.lastName ?? '',
       this.applyForm.value.email ?? ''
     );
+    this.applyForm.reset();
+    localStorage.removeItem('userApplicationProfile');
+    alert('¡Solicitud enviada con éxito!');
   }
 }

@@ -1,19 +1,33 @@
-/* Puedes añadir estilos globales a este archivo y también importar otros archivos de estilo */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+:root {
+  --primary-color: #605DC8;
+  --secondary-color: #8B89E6;
+  --accent-color: #e8e7fa;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Be Vietnam Pro', 'Inter', sans-serif;
+  background: #f5f5fb;
 }
 
 button.primary {
-  padding: 10px;
+  padding: 10px 20px;
   border: solid 1px var(--primary-color);
   background: var(--primary-color);
   color: white;
   border-radius: 8px;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+button.primary:hover {
+  opacity: 0.85;
 }

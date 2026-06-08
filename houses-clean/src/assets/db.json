@@ -9,7 +9,10 @@
       "availableUnits": 4,
       "wifi": true,
       "laundry": true,
-      "coordinate": { "latitude": 41.8781, "longitude": -87.6298 },
+      "coordinate": {
+        "latitude": 41.8781,
+        "longitude": -87.6298
+      },
       "price": 1200,
       "available": true
     },
@@ -22,7 +25,10 @@
       "availableUnits": 0,
       "wifi": false,
       "laundry": true,
-      "coordinate": { "latitude": 34.0195, "longitude": -118.4912 },
+      "coordinate": {
+        "latitude": 34.0195,
+        "longitude": -118.4912
+      },
       "price": 1500,
       "available": false
     },
@@ -35,7 +41,10 @@
       "availableUnits": 1,
       "wifi": false,
       "laundry": false,
-      "coordinate": { "latitude": 58.3019, "longitude": -134.4197 },
+      "coordinate": {
+        "latitude": 58.3019,
+        "longitude": -134.4197
+      },
       "price": 900,
       "available": true
     },
@@ -48,7 +57,10 @@
       "availableUnits": 1,
       "wifi": true,
       "laundry": false,
-      "coordinate": { "latitude": 41.8818, "longitude": -87.6231 },
+      "coordinate": {
+        "latitude": 41.8818,
+        "longitude": -87.6231
+      },
       "price": 1100,
       "available": true
     },
@@ -61,7 +73,10 @@
       "availableUnits": 1,
       "wifi": true,
       "laundry": false,
-      "coordinate": { "latitude": 41.5934, "longitude": -87.3464 },
+      "coordinate": {
+        "latitude": 41.5934,
+        "longitude": -87.3464
+      },
       "price": 850,
       "available": true
     },
@@ -74,7 +89,10 @@
       "availableUnits": 2,
       "wifi": true,
       "laundry": true,
-      "coordinate": { "latitude": 37.8044, "longitude": -122.2712 },
+      "coordinate": {
+        "latitude": 37.8044,
+        "longitude": -122.2712
+      },
       "price": 1800,
       "available": true
     },
@@ -87,7 +105,10 @@
       "availableUnits": 5,
       "wifi": true,
       "laundry": true,
-      "coordinate": { "latitude": 37.8044, "longitude": -122.2712 },
+      "coordinate": {
+        "latitude": 37.8044,
+        "longitude": -122.2712
+      },
       "price": 1750,
       "available": true
     },
@@ -100,7 +121,10 @@
       "availableUnits": 2,
       "wifi": true,
       "laundry": true,
-      "coordinate": { "latitude": 37.8050, "longitude": -122.2730 },
+      "coordinate": {
+        "latitude": 37.805,
+        "longitude": -122.273
+      },
       "price": 1900,
       "available": true
     },
@@ -113,7 +137,10 @@
       "availableUnits": 10,
       "wifi": false,
       "laundry": false,
-      "coordinate": { "latitude": 37.8060, "longitude": -122.2700 },
+      "coordinate": {
+        "latitude": 37.806,
+        "longitude": -122.27
+      },
       "price": 1600,
       "available": true
     },
@@ -126,9 +153,13 @@
       "availableUnits": 6,
       "wifi": true,
       "laundry": true,
-      "coordinate": { "latitude": 45.5152, "longitude": -122.6784 },
+      "coordinate": {
+        "latitude": 45.5152,
+        "longitude": -122.6784
+      },
       "price": 1400,
       "available": true
     }
+
   ]
 }

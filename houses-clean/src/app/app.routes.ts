@@ -7,7 +7,7 @@ export const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    title: 'Página de Inicio'
+    title: 'Homes - Inicio'
   },
   {
     path: 'details/:id',
@@ -17,6 +17,6 @@ export const routes: Routes = [
   {
     path: 'add-house',
     component: AddHouseComponent,
-    title: 'Registrar Nueva Vivienda'
+    title: 'Añadir Nueva Vivienda'
   }
 ];

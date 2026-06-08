@@ -22,17 +22,17 @@ export class AddHouseComponent {
   submitting = false;
 
   form = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(3)]], // Requerido, mín 3 [cite: 20, 55]
-    city: ['', Validators.required],                           // Requerido [cite: 21]
-    state: ['', Validators.required],                          // Requerido [cite: 22]
-    availableUnits: [1, [Validators.required, Validators.min(1)]], // Requerido, número >= 1 [cite: 23]
-    price: [10000, [Validators.required, Validators.min(10000)]],  // Requerido, número >= 10000 [cite: 26]
-    wifi: [false],
-    laundry: [false],
-    available: [true] // Por defecto activo [cite: 29]
+    name:           ['', [Validators.required, Validators.minLength(3)]],
+    city:           ['', Validators.required],
+    state:          ['', Validators.required],
+    availableUnits: [1,  [Validators.required, Validators.min(1)]],
+    price:          [10000, [Validators.required, Validators.min(10000)]],
+    wifi:           [false],
+    laundry:        [false],
+    available:      [true]
   });
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -42,37 +42,32 @@ export class AddHouseComponent {
     this.successMsg = '';
     this.errorMsg = '';
 
-    // Estructurar el objeto adaptándolo a las coordenadas por defecto obligatorias [cite: 30, 31, 76]
     const newHouse: HousingLocation = {
-      name: this.form.value.name ?? '',
-      city: this.form.value.city ?? '',
-      state: this.form.value.state ?? '',
+      name:           this.form.value.name ?? '',
+      city:           this.form.value.city ?? '',
+      state:          this.form.value.state ?? '',
       availableUnits: Number(this.form.value.availableUnits),
-      price: Number(this.form.value.price),
-      wifi: !!this.form.value.wifi,
-      laundry: !!this.form.value.laundry,
-      available: !!this.form.value.available,
-      photo: '', // Se manda vacío según documento [cite: 30]
-      coordinate: { latitude: 40.4167, longitude: -3.7037 } // Coordenadas por defecto (Ej: Madrid) [cite: 31]
+      price:          Number(this.form.value.price),
+      wifi:           !!this.form.value.wifi,
+      laundry:        !!this.form.value.laundry,
+      available:      !!this.form.value.available,
+      photo:          '',
+      coordinate:     { latitude: 0, longitude: 0 }
     };
 
     this.housingService.addHouse(newHouse).subscribe({
-      next: (created) => {
-        this.successMsg = `Vivienda "${created.name}" creada con éxito (ID: ${created.id})`; // [cite: 86, 87]
-        this.form.reset({ availableUnits: 1, price: 10000, wifi: false, laundry: false, available: true });
+      next: () => {
         this.submitting = false;
-
-        // Redirigir a inicio automáticamente a los 3 segundos [cite: 91]
-        setTimeout(() => this.router.navigate(['/']), 3000);
+        this.router.navigate(['/']);
       },
       error: () => {
-        this.errorMsg = 'Error al guardar. ¿Está json-server corriendo?'; // [cite: 94, 95]
+        this.errorMsg = '❌ Error al guardar. ¿Está json-server corriendo?';
         this.submitting = false;
       }
     });
   }
 
-  cancel() {
-    this.router.navigate(['/']); // [cite: 101]
+  cancel(): void {
+    this.router.navigate(['/']);
   }
 }

@@ -1,58 +1,235 @@
+article {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
 .listing-photo {
-  height: 600px;
-  width: 50%;
+  height: 480px;
+  width: 48%;
   object-fit: cover;
-  border-radius: 30px;
+  border-radius: 20px;
   float: right;
-}
-
-.listing-heading {
-  font-size: 48pt;
-  font-weight: bold;
-  margin-bottom: 15px;
-}
-
-.listing-location::before {
-  content: url("/assets/location-pin.svg");
-}
-
-.listing-location {
-  font-size: 24pt;
+  margin-left: 30px;
   margin-bottom: 20px;
 }
 
-.listing-features > h2 {
+.listing-heading {
+  font-size: 36pt;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #1a1a2e;
+  line-height: 1.1;
+}
+
+.listing-location {
+  font-size: 18pt;
+  color: #555;
+  margin-bottom: 16px;
+}
+
+.listing-location::before {
+  content: "📍 ";
+}
+
+.price-tag {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.price-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #888;
+  font-weight: 600;
+}
+
+.price-tag strong {
+  font-size: 28pt;
+  font-weight: 700;
   color: var(--primary-color);
-  margin: 20px 0;
+}
+
+.availability {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.availability.available {
+  background: rgba(34, 197, 94, 0.1);
+  color: #16a34a;
+}
+
+.availability.unavailable {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+}
+
+/* Sección clima */
+.weather-box {
+  clear: both;
+  background: linear-gradient(135deg, #e8e7fa 0%, #f0f0ff 100%);
+  border: 1px solid rgba(96, 93, 200, 0.2);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 30px;
+}
+
+.weather-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.weather-info img {
+  width: 64px;
+  height: 64px;
+}
+
+.weather-details .temp {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary-color);
+  line-height: 1;
+}
+
+.weather-details .condition {
+  font-size: 15px;
+  color: #444;
+  margin: 4px 0;
+}
+
+.weather-details .extras {
+  font-size: 13px;
+  color: #666;
+}
+
+/* Características */
+.listing-features {
+  margin-bottom: 30px;
+}
+
+.listing-features ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
 }
 
 .listing-features li {
-  font-size: 14pt;
+  font-size: 15px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #f9f9fe;
+  border-radius: 10px;
+  border: 1px solid rgba(96, 93, 200, 0.1);
 }
 
-.listing-apply h2 {
-  font-size: 18pt;
-  margin-bottom: 15px;
-  padding: 20px 0;
+/* Mapa */
+.map-section {
+  margin-bottom: 30px;
+}
+
+#map {
+  height: 320px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 14px;
+  border: 2px solid rgba(96, 93, 200, 0.15);
+}
+
+/* Formulario */
+.listing-apply {
+  margin-bottom: 40px;
+  padding: 30px;
+  background: white;
+  border-radius: 16px;
+  border: 1px solid rgba(96, 93, 200, 0.12);
+  box-shadow: 0 2px 12px rgba(96, 93, 200, 0.08);
+}
+
+.section-heading {
   color: var(--primary-color);
-}
-
-label, input {
-  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
 }
 
 label {
+  display: block;
   color: var(--secondary-color);
-  font-weight: bold;
+  font-weight: 700;
   text-transform: uppercase;
-  font-size: 12pt;
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  margin-top: 16px;
+  margin-bottom: 6px;
 }
 
-input {
-  font-size: 16pt;
-  margin-bottom: 15px;
-  padding: 10px;
-  width: 400px;
-  border: solid 1px var(--shadow-color);
-  border-radius: 8px;
+input[type="text"],
+input[type="email"] {
+  display: block;
+  font-size: 15px;
+  padding: 10px 14px;
+  width: 100%;
+  max-width: 440px;
+  border: 1.5px solid #ddd;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(96, 93, 200, 0.12);
+}
+
+input.input-error {
+  border-color: #ef4444;
+}
+
+.error-msg {
+  display: block;
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+button.primary {
+  margin-top: 24px;
+  padding: 12px 32px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 10px;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 60px;
+  color: #888;
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .listing-photo {
+    float: none;
+    width: 100%;
+    height: 280px;
+    margin-left: 0;
+    margin-bottom: 20px;
+  }
+  .listing-heading {
+    font-size: 24pt;
+  }
 }
