@@ -57,34 +57,41 @@
 
   <section class="listing-apply">
     <h2 class="section-heading">Aplica ahora para vivir aquí</h2>
-    <form [formGroup]="applyForm" (ngSubmit)="submitApplication()" novalidate>
 
-      <label for="first-name">Nombre *</label>
-      <input id="first-name" type="text" formControlName="firstName"
-             [class.input-error]="applyForm.get('firstName')?.touched && applyForm.get('firstName')?.invalid">
-      <span class="error-msg"
-            *ngIf="applyForm.get('firstName')?.touched && applyForm.get('firstName')?.invalid">
-        El nombre es obligatorio.
-      </span>
+    @if (alreadyApplied()) {
+      <div class="already-applied-msg">
+        ✅ Ya has solicitado esta casa. Nos pondremos en contacto contigo pronto.
+      </div>
+    } @else {
+      <form [formGroup]="applyForm" (ngSubmit)="submitApplication()" novalidate>
 
-      <label for="last-name">Apellidos *</label>
-      <input id="last-name" type="text" formControlName="lastName"
-             [class.input-error]="applyForm.get('lastName')?.touched && applyForm.get('lastName')?.invalid">
-      <span class="error-msg"
-            *ngIf="applyForm.get('lastName')?.touched && applyForm.get('lastName')?.invalid">
-        Los apellidos son obligatorios.
-      </span>
+        <label for="first-name">Nombre *</label>
+        <input id="first-name" type="text" formControlName="firstName"
+               [class.input-error]="applyForm.get('firstName')?.touched && applyForm.get('firstName')?.invalid">
+        <span class="error-msg"
+              *ngIf="applyForm.get('firstName')?.touched && applyForm.get('firstName')?.invalid">
+          El nombre es obligatorio.
+        </span>
 
-      <label for="email">Correo electrónico *</label>
-      <input id="email" type="email" formControlName="email"
-             [class.input-error]="applyForm.get('email')?.touched && applyForm.get('email')?.invalid">
-      <span class="error-msg"
-            *ngIf="applyForm.get('email')?.touched && applyForm.get('email')?.invalid">
-        Introduce un email válido.
-      </span>
+        <label for="last-name">Apellidos *</label>
+        <input id="last-name" type="text" formControlName="lastName"
+               [class.input-error]="applyForm.get('lastName')?.touched && applyForm.get('lastName')?.invalid">
+        <span class="error-msg"
+              *ngIf="applyForm.get('lastName')?.touched && applyForm.get('lastName')?.invalid">
+          Los apellidos son obligatorios.
+        </span>
 
-      <button type="submit" class="primary">Enviar Solicitud</button>
-    </form>
+        <label for="email">Correo electrónico *</label>
+        <input id="email" type="email" formControlName="email"
+               [class.input-error]="applyForm.get('email')?.touched && applyForm.get('email')?.invalid">
+        <span class="error-msg"
+              *ngIf="applyForm.get('email')?.touched && applyForm.get('email')?.invalid">
+          Introduce un email válido.
+        </span>
+
+        <button type="submit" class="primary">Enviar Solicitud</button>
+      </form>
+    }
   </section>
 
 </article>

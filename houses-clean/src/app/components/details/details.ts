@@ -22,6 +22,7 @@ export class DetailsComponent implements OnInit {
   housingLocation = signal<HousingLocation | undefined>(undefined);
   weatherData = signal<any>(null);
   weatherError = signal(false);
+  alreadyApplied = signal(false);
   private map: any;
 
   applyForm = this.fb.group({
@@ -33,6 +34,10 @@ export class DetailsComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const id = Number(params.get('id'));
+
+      const applied = JSON.parse(localStorage.getItem('appliedHouses') || '[]');
+      this.alreadyApplied.set(applied.includes(String(id)));
+
       this.housingService.getHousingLocationById(id).subscribe(location => {
         this.housingLocation.set(location);
         setTimeout(() => this.initMap(), 0);
@@ -82,14 +87,24 @@ export class DetailsComponent implements OnInit {
       this.applyForm.markAllAsTouched();
       return;
     }
+
     localStorage.setItem('userApplicationProfile', JSON.stringify(this.applyForm.getRawValue()));
+
+    const id = this.housingLocation()?.id;
+    const applied = JSON.parse(localStorage.getItem('appliedHouses') || '[]');
+    if (!applied.includes(String(id))) {
+      applied.push(String(id));
+      localStorage.setItem('appliedHouses', JSON.stringify(applied));
+    }
+
     this.housingService.submitApplication(
       this.applyForm.value.firstName ?? '',
       this.applyForm.value.lastName ?? '',
       this.applyForm.value.email ?? ''
     );
+
     this.applyForm.reset();
-    localStorage.removeItem('userApplicationProfile');
+    this.alreadyApplied.set(true);
     alert('¡Solicitud enviada con éxito!');
   }
 }

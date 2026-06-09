@@ -220,6 +220,14 @@ button.primary {
   color: #888;
   font-size: 18px;
 }
+.already-applied-msg {
+  background-color: #e6f4ea;
+  color: #2d6a4f;
+  border: 1px solid #95d5b2;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+}
 
 @media (max-width: 768px) {
   .listing-photo {
